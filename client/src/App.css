@@ -1,0 +1,22 @@
+.todo_item {
+  margin-bottom: 28px;
+}
+
+.navbar {
+  margin-bottom: 28px;
+}
+
+.pagination {
+  width: 700px;
+  margin: auto;
+}
+
+.list_btn {
+  margin: auto;
+  width: 300px;
+}
+
+.login_btn {
+  margin: auto;
+  width: 300px;
+}

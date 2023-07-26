@@ -1,0 +1,29 @@
+import express from "express";
+import { sequelize } from "../db.js";
+import dotenv from "dotenv";
+import router from "./router/index.js";
+import cors from "cors";
+
+dotenv.config();
+
+const PORT = process.env.PORT || 3001;
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use("/api", router);
+
+const start = async () => {
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    app.listen(PORT, async () => {
+      console.log(`Server started on port ${PORT}`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+start();
