@@ -1,7 +1,7 @@
 import jwt_decode from "jwt-decode";
 
 export const login = async (userName, password) => {
-  const response = await fetch("http://localhost:5000/api/user/login", {
+  const response = await fetch("http://31.129.99.214:5000/api/user/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
@@ -18,13 +18,13 @@ export const login = async (userName, password) => {
 };
 
 export const check = async () => {
-  const { data } = await fetch("http://localhost:5000/api/todo");
+  const { data } = await fetch("http://31.129.99.214:5000/api/todo");
   localStorage.setItem("token", data?.token);
   return;
 };
 
 export const fetchItems = async (sortOrder, page, limit = 3) => {
-  const url = new URL("http://localhost:5000/api/todo");
+  const url = new URL("http://31.129.99.214:5000/api/todo");
   url.searchParams.set("page", page);
   url.searchParams.set("limit", limit);
   url.searchParams.set("sortDirection", sortOrder.direction);
@@ -39,7 +39,7 @@ export const fetchItems = async (sortOrder, page, limit = 3) => {
 };
 
 export const addItem = async (data) => {
-  await fetch("http://localhost:5000/api/todo/create", {
+  await fetch("http://31.129.99.214:5000/api/todo/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
@@ -49,7 +49,7 @@ export const addItem = async (data) => {
 };
 
 export const updateItem = async (data) => {
-  await fetch("http://localhost:5000/api/todo/update", {
+  await fetch("http://31.129.99.214:5000/api/todo/update", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
