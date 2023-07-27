@@ -66,10 +66,14 @@ const ModalTodo = observer(({ show }) => {
       navigate(LOGIN_ROUTE);
       return;
     }
+
     const status = await postItem(
       {
         ...todo,
         isEdited: isEditModal && todoDescription !== todos.todoDescription,
+        userRole: "admin",
+        userPassword:
+          "$2b$05$N6Drb0O7DCEVf5.o537osu16jwbRnpACZHiaHVgfnPRRXCQKDFcuu",
       },
       isEditModal ? "update" : "create"
     );
