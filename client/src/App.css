@@ -1,5 +1,7 @@
 .todo_item {
-  margin-bottom: 28px;
+  margin: 32px auto;
+  border-radius: 5px;
+  max-width: 700px;
 }
 
 .navbar {
@@ -19,4 +21,39 @@
 .login_btn {
   margin: auto;
   width: 300px;
+}
+
+.overlay_wrapper {
+  padding-top: 10px;
+  position: fixed;
+  /* display: none; */
+  width: 300px;
+  height: 50px;
+  top: 10%;
+  left: 80%;
+  background-color: rgba(220, 223, 214, 0.9);
+  border-radius: 5px;
+  z-index: 2;
+}
+
+.overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.col {
+  text-align: start;
+}
+
+.row {
+  width: 600px;
+}
+
+.row_item {
+  width: 70%;
+  margin: 0 auto 8px;
+}
+
+.todo_item_subtitle {
+  color: rgb(167, 166, 156);
 }

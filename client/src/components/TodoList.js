@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite";
 import { Context } from "../index";
 import { fetchItems } from "../utils";
 import TodoItem from "./TodoItem";
-import CreateTodo from "./ModalCreateTodo";
+import ModalTodo from "./ModalTodo";
 import { sortProps } from "../consts";
 
 const TodoList = observer(() => {
@@ -16,7 +16,13 @@ const TodoList = observer(() => {
       todos.setTodos(data.todos);
     });
     // eslint-disable-next-line
-  }, [todos.page, todos.sortOrder, todos.totalCount, todos.isUpdate]);
+  }, [
+    todos.page,
+    todos.sortOrder,
+    todos.totalCount,
+    todos.isUpdate,
+    todos.overlayText,
+  ]);
 
   const handleSortFieldClick = (event) => {
     todos.setSortOrder({ ...todos.sortOrder, field: event.target.value });
@@ -26,14 +32,13 @@ const TodoList = observer(() => {
     const direction = todos.sortOrder.direction === "ASC" ? "DESC" : "ASC";
     todos.setSortOrder({ ...todos.sortOrder, direction });
   };
-
   return (
     <Container>
       <div className="list_btn">
-        <div class="d-flex flex-column">
+        <div className="d-flex flex-column">
           <Button
             variant="secondary"
-            onClick={todos.setIsShowCreateModal.bind(todos)}
+            onClick={todos.setIsShowModal.bind(todos)}
             className="mb-3"
           >
             Добавить новую задачу
@@ -45,14 +50,15 @@ const TodoList = observer(() => {
           >
             {sortProps[todos.sortOrder.direction]}
           </Button>
-          {sortProps.field.map((item) => (
+          {sortProps.field.map(([value, label], index) => (
             <Button
-              value={item[0]}
+              key={index}
+              value={value}
               variant="outline-danger"
               onClick={handleSortFieldClick}
               className="mb-3"
             >
-              {item[1]}
+              {label}
             </Button>
           ))}
         </div>
@@ -64,7 +70,7 @@ const TodoList = observer(() => {
           </>
         );
       })}
-      <CreateTodo show={todos.isShowCreateModal}></CreateTodo>
+      <ModalTodo show={todos.isShowModal}></ModalTodo>
     </Container>
   );
 });

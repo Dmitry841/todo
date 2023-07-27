@@ -9,6 +9,7 @@ const TodoPage = observer(() => {
   const handleClick = (page) => {
     todos.setPage(page);
   };
+
   return (
     <div>
       <TodoList />

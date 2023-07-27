@@ -1,34 +1,21 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { BrowserRouter } from "react-router-dom";
 import AppRouter from "./components/AppRouter";
 import NavBar from "./components/NavBar";
 import { observer } from "mobx-react-lite";
 import { Context } from "./index";
-import { check } from "./utils.js";
-import { Spinner } from "react-bootstrap";
+import Overlay from "./components/Overlay";
 import "./App.css";
 
 const App = observer(() => {
-  const { user } = useContext(Context);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    check()
-      .then((data) => {
-        user.setUser(true);
-        user.setIsAuth(true);
-      })
-      .finally(() => setLoading(false));
-    // eslint-disable-next-line
-  }, []);
-
-  if (loading) {
-    return <Spinner animation={"grow"} />;
-  }
+  const {
+    todos: { overlayText },
+  } = useContext(Context);
 
   return (
     <BrowserRouter>
-      <NavBar classname='navbar'/>
+      <Overlay text={overlayText} show={!!overlayText} />
+      <NavBar classname="navbar" />
       <AppRouter />
     </BrowserRouter>
   );

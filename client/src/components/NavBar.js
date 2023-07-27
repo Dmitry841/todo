@@ -12,10 +12,9 @@ const NavBar = observer(() => {
   const navigate = useNavigate();
 
   const logOut = () => {
-    user.setUser({});
+    localStorage.removeItem("token");
+    user.setUserCredentials({});
     user.setIsAuth(false);
-    user.setPass("");
-    user.setLogin("");
   };
 
   const logIn = () => {
@@ -25,7 +24,6 @@ const NavBar = observer(() => {
   const redirectToTodo = () => {
     navigate(TODO_ROUTE);
   };
-
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
@@ -41,7 +39,7 @@ const NavBar = observer(() => {
         <Nav className="ml-auto">
           <Button
             variant={"outline-light"}
-            onClick={user.isAuth ? logOut : logIn}
+            onClick={localStorage.getItem("token") ? logOut : logIn}
             className="ml-2"
           >
             {user.isAuth ? "Выйти" : "Войти"}

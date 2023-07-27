@@ -1,50 +1,107 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { login } from "../utils";
 import { Context } from "../index";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 import { TODO_ROUTE } from "../consts";
+import { ERRORS_TEXT } from "../consts";
 
 const Login = observer(() => {
-  const { user } = useContext(Context);
+  const {
+    user,
+    user: { userCredentials },
+    user: {
+      userCredentials: { login: loginVal, pass },
+    },
+    user: {
+      authErrors: { login: loginError, pass: passError },
+      authResponseErrors: { userNotFound, passwordIncorrect },
+    },
+  } = useContext(Context);
   const navigate = useNavigate();
-  const setLogin = (event) => {
-    user.setLogin(event.target.value);
-  };
 
-  const setPass = (event) => {
-    user.setPass(event.target.value);
+  useEffect(() => {
+    return () => {
+      user.setUserCredentials({
+        login: "",
+        pass: "",
+      });
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  const setValue = (fieldName) => (event) => {
+    user.setUserCredentials({
+      ...userCredentials,
+      [fieldName]: event.target.value,
+    });
+    user.setAuthErrors({
+      login: loginError,
+      pass: passError,
+      [fieldName]: false,
+    });
+    user.setAuthResponseErrors({
+      userNotFound: false,
+      passwordIncorrect: false,
+    });
   };
 
   const handleSubmit = async () => {
-    const auth = await login(user.login, user.pass);
-    user.setIsAuth(!!auth);
-    if (auth) {
-      navigate(TODO_ROUTE);
+    const isErrors = !(loginVal && pass);
+    if (isErrors) {
+      user.setAuthErrors({
+        login: !loginVal,
+        pass: !pass,
+      });
+      return;
     }
+    const response = await login(loginVal, pass);
+
+    if (response.ok) {
+      user.setIsAuth(true);
+      navigate(TODO_ROUTE);
+      return;
+    }
+
+    user.setAuthResponseErrors({
+      userNotFound: response.message === "userNotFound",
+      passwordIncorrect: response.message === "passwordIncorrect",
+    });
   };
 
   return (
-    <div class="d-flex flex-column">
+    <div className="d-flex flex-column">
       <Form className="login_btn">
-        <Form.Control
-          value={user.login}
-          onChange={setLogin}
-          placeholder={"Введите логин"}
-          className="mb-3"
-        />
-        <Form.Control
-          value={user.pass}
-          onChange={setPass}
-          placeholder={"Введите пароль"}
-          className="mb-3"
-        />
+        <div className="mb-3">
+          <Form.Control
+            required
+            isInvalid={loginError || userNotFound}
+            value={loginVal}
+            onChange={setValue("login")}
+            placeholder={"Введите логин"}
+          />
+          <Form.Control.Feedback type="invalid">
+            {loginError ? ERRORS_TEXT.common : ERRORS_TEXT.userNotFound}
+          </Form.Control.Feedback>
+        </div>
+        <div className="mb-3">
+          <Form.Control
+            required
+            isInvalid={passError || passwordIncorrect}
+            value={pass}
+            onChange={setValue("pass")}
+            placeholder={"Введите пароль"}
+          />
+          <Form.Control.Feedback type="invalid">
+            {passError ? ERRORS_TEXT.common : ERRORS_TEXT.passwordIncorrect}
+          </Form.Control.Feedback>
+        </div>
         <Button
           variant="primary"
           size="large"
-          onClick={handleSubmit}
           className="login_btn"
+          onClick={handleSubmit}
         >
           Войти
         </Button>

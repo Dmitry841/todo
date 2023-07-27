@@ -1,30 +1,35 @@
-import jwt_decode from "jwt-decode";
+// import jwt_decode from "jwt-decode";
 
 export const login = async (userName, password) => {
-  const response = await fetch("http://31.129.99.214:5000/api/user/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
-    body: JSON.stringify({ userName, password }),
-  });
+  const response = await fetch(
+    `${process.env.REACT_APP_BASE_URL}/api/user/login`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify({ userName, password }),
+    }
+  );
 
   if (response.ok) {
     const data = await response.json();
     localStorage.setItem("token", data.token);
-    return jwt_decode(data.token);
+    // return jwt_decode(data.token);
+    return response;
   }
-  return null;
+  const data = await response.json();
+  return data;
 };
 
 export const check = async () => {
-  const { data } = await fetch("http://31.129.99.214:5000/api/todo");
+  const { data } = await fetch(`${process.env.REACT_APP_BASE_URL}/api/todo`);
   localStorage.setItem("token", data?.token);
   return;
 };
 
 export const fetchItems = async (sortOrder, page, limit = 3) => {
-  const url = new URL("http://31.129.99.214:5000/api/todo");
+  const url = new URL(`${process.env.REACT_APP_BASE_URL}/api/todo`);
   url.searchParams.set("page", page);
   url.searchParams.set("limit", limit);
   url.searchParams.set("sortDirection", sortOrder.direction);
@@ -38,22 +43,34 @@ export const fetchItems = async (sortOrder, page, limit = 3) => {
   return data;
 };
 
-export const addItem = async (data) => {
-  await fetch("http://31.129.99.214:5000/api/todo/create", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
-    body: JSON.stringify(data),
-  });
+export const postItem = async (data, path) => {
+  const response = await fetch(
+    `${process.env.REACT_APP_BASE_URL}/api/todo/${path}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+  return response.status;
 };
 
-export const updateItem = async (data) => {
-  await fetch("http://31.129.99.214:5000/api/todo/update", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
-    body: JSON.stringify(data),
+export const emailValidater = (val) =>
+  val
+    ? /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/gim.test(
+        val
+      )
+    : false;
+
+export const htmlEncode = (str) => {
+  console.log(
+    String(str).replace(/[^\w. ]/gi, function (c) {
+      return "&#" + c.charCodeAt(0) + ";";
+    })
+  );
+  return String(str).replace(/[^\w. ]/gi, function (c) {
+    return "&#" + c.charCodeAt(0) + ";";
   });
 };
