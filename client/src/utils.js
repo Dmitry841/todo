@@ -63,14 +63,3 @@ export const emailValidater = (val) =>
         val
       )
     : false;
-
-export const htmlEncode = (str) => {
-  console.log(
-    String(str).replace(/[^\w. ]/gi, function (c) {
-      return "&#" + c.charCodeAt(0) + ";";
-    })
-  );
-  return String(str).replace(/[^\w. ]/gi, function (c) {
-    return "&#" + c.charCodeAt(0) + ";";
-  });
-};
