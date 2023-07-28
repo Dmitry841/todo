@@ -1,5 +1,3 @@
-// import jwt_decode from "jwt-decode";
-
 export const login = async (userName, password) => {
   const response = await fetch(
     `${process.env.REACT_APP_BASE_URL}/api/user/login`,
@@ -15,7 +13,6 @@ export const login = async (userName, password) => {
   if (response.ok) {
     const data = await response.json();
     localStorage.setItem("token", data.token);
-    // return jwt_decode(data.token);
     return response;
   }
   const data = await response.json();
